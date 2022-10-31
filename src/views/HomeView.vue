@@ -82,6 +82,7 @@ export default {
     },
     handleSwitchSelect(value) {
       this.activeSearchItem = value;
+      this.searchUsers();
     },
     searchUsers() {
       const newUsers = dummyUsers.filter((item) =>
