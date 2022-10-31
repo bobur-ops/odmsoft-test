@@ -115,8 +115,7 @@ export default {
     </div>
     <div class="sort-status">
       Sorting by <span> {{ isSortByName ? "Name" : "Gender" }}</span> (click on
-      <span>name</span> or <span>gender</span> at the top of table to change
-      switch)
+      <span>name</span> or <span>gender</span> at the top of table to switch)
     </div>
     <users-table @sort="sort" :users="users.slice(0, limit)" />
   </div>
