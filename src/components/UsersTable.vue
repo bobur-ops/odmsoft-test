@@ -37,6 +37,7 @@ export default {
 th {
   text-align: left;
   padding: 15px 0;
+  cursor: pointer;
 }
 td {
   padding: 20px 0;

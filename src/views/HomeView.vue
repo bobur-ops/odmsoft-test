@@ -1,10 +1,12 @@
 <script>
 import UsersTable from "@/components/UsersTable.vue";
+import SelectComponent from "@/components/SelectComponent.vue";
 import { dummyUsers } from "../constants/dummyData";
 
 export default {
   components: {
     UsersTable,
+    SelectComponent,
   },
   data() {
     return {
@@ -33,12 +35,19 @@ export default {
           text: "IP address",
           id: 4,
         },
-        {
-          value: "gender",
-          text: "Gender",
-          id: 5,
-        },
       ],
+      genders: [
+        "Male",
+        "Female",
+        "Agender",
+        "Non-binary",
+        "Polygender",
+        "Genderqueer",
+        "Bigender",
+        "Genderfluid",
+      ],
+
+      genderFilter: "",
       activeSearchItem: "first_name",
     };
   },
@@ -58,6 +67,10 @@ export default {
         res = data.sort((a, b) => a[sortType].localeCompare(b[sortType]));
       } else {
         res = dummyUsers.sort((a, b) => a[sortType].localeCompare(b[sortType]));
+      }
+
+      if (this.genderFilter) {
+        res = res.filter((item) => item.gender === this.genderFilter);
       }
 
       return res;
@@ -82,15 +95,33 @@ export default {
     },
     handleSwitchSelect(value) {
       this.activeSearchItem = value;
-      this.searchUsers();
+      if (value === "gender") {
+        this.searchQuery = "";
+      } else {
+        this.searchUsers();
+      }
     },
     searchUsers() {
-      const newUsers = dummyUsers.filter((item) =>
+      let newUsers = dummyUsers.filter((item) =>
         item[this.activeSearchItem]
           .toLowerCase()
           .includes(this.searchQuery.toLowerCase())
       );
+      if (this.genderFilter) {
+        newUsers = newUsers.filter((item) => item.gender === this.genderFilter);
+      }
       this.users = [...newUsers];
+    },
+    changeGenderFilter(value) {
+      this.searchQuery = "";
+      if (this.genderFilter === value) {
+        this.genderFilter = "";
+        this.users = dummyUsers;
+      } else {
+        this.genderFilter = value;
+        const newUsers = dummyUsers.filter((item) => item.gender === value);
+        this.users = newUsers;
+      }
     },
   },
 };
@@ -99,6 +130,11 @@ export default {
 <template>
   <div class="wrapper">
     <div class="search-bar">
+      <select-component
+        @changeValue="changeGenderFilter"
+        :options="genders"
+        :selected="genderFilter"
+      />
       <div class="custom-select">
         <select @change="(e) => handleSwitchSelect(e.target.value)">
           <option
